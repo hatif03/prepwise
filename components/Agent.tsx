@@ -146,47 +146,84 @@ const Agent = ({
   };
 
   return (
-    <>
+    <div className="space-y-12">
+      {/* Header */}
+      <div className="text-center space-y-3">
+        <h1 className="text-2xl font-medium text-foreground">
+          AI Interview Session
+        </h1>
+        <p className="text-base text-muted-foreground">
+          Practice with our advanced AI interviewer
+        </p>
+      </div>
+
+      {/* Video Call Interface */}
       <div className="call-view">
         {/* AI Interviewer Card */}
         <div className="card-interviewer">
-          <div className="avatar">
-            <Image
-              src="/ai-avatar.png"
-              alt="profile-image"
-              width={65}
-              height={54}
-              className="object-cover"
-            />
-            {isSpeaking && <span className="animate-speak" />}
+          <div className="relative">
+            <div className="avatar">
+              <Image
+                src="/ai-avatar.png"
+                alt="AI Interviewer"
+                width={70}
+                height={70}
+                className="object-cover rounded-full"
+              />
+              {isSpeaking && <span className="animate-speak" />}
+            </div>
+            {isSpeaking && (
+              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-primary text-primary-foreground px-2.5 py-0.5 rounded-full text-xs font-medium">
+                Speaking...
+              </div>
+            )}
           </div>
-          <h3>AI Interviewer</h3>
+          <h3 className="text-primary mt-4 font-medium">AI Interviewer</h3>
+          <p className="text-sm text-muted-foreground text-center">
+            {callStatus === "ACTIVE"
+              ? "Interview in progress"
+              : "Ready to start"}
+          </p>
         </div>
 
         {/* User Profile Card */}
         <div className="card-border">
           <div className="card-content">
-            <Image
-              src="/user-avatar.png"
-              alt="profile-image"
-              width={539}
-              height={539}
-              className="rounded-full object-cover size-[120px]"
-            />
-            <h3>{userName}</h3>
+            <div className="relative">
+              <Image
+                src="/user-avatar.png"
+                alt="Your Profile"
+                width={100}
+                height={100}
+                className="rounded-full object-cover size-[100px] shadow-sm"
+              />
+              <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-accent rounded-full flex items-center justify-center border border-border">
+                <div className="w-2 h-2 bg-white rounded-full"></div>
+              </div>
+            </div>
+            <h3 className="text-foreground font-medium">{userName}</h3>
+            <p className="text-sm text-muted-foreground text-center">
+              {callStatus === "ACTIVE"
+                ? "You're speaking"
+                : "Ready to participate"}
+            </p>
           </div>
         </div>
       </div>
 
+      {/* Transcript Display */}
       {messages.length > 0 && (
         <div className="transcript-border">
           <div className="transcript">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+              <span className="text-sm font-medium text-primary">
+                Live Transcript
+              </span>
+            </div>
             <p
               key={lastMessage}
-              className={cn(
-                "transition-opacity duration-500 opacity-0",
-                "animate-fadeIn opacity-100"
-              )}
+              className={cn("transition-all duration-500", "animate-fadeIn")}
             >
               {lastMessage}
             </p>
@@ -194,29 +231,59 @@ const Agent = ({
         </div>
       )}
 
-      <div className="w-full flex justify-center">
+      {/* Call Controls */}
+      <div className="flex justify-center mt-8">
         {callStatus !== "ACTIVE" ? (
-          <button className="relative btn-call" onClick={() => handleCall()}>
+          <button
+            className="relative btn-call group"
+            onClick={() => handleCall()}
+            disabled={callStatus === "CONNECTING"}
+          >
             <span
               className={cn(
-                "absolute animate-ping rounded-full opacity-75",
+                "absolute -inset-1 bg-gradient-to-r from-primary-400 to-primary-600 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-300",
                 callStatus !== "CONNECTING" && "hidden"
               )}
             />
-
-            <span className="relative">
-              {callStatus === "INACTIVE" || callStatus === "FINISHED"
-                ? "Call"
-                : ". . ."}
+            <span className="relative flex items-center gap-2">
+              {callStatus === "CONNECTING" ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  Connecting...
+                </>
+              ) : (
+                <>
+                  <svg
+                    className="w-5 h-5"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                  </svg>
+                  Start Interview
+                </>
+              )}
             </span>
           </button>
         ) : (
-          <button className="btn-disconnect" onClick={() => handleDisconnect()}>
-            End
+          <button
+            className="btn-disconnect group"
+            onClick={() => handleDisconnect()}
+          >
+            <span className="relative flex items-center gap-2">
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              End Interview
+            </span>
           </button>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

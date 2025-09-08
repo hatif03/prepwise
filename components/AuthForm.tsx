@@ -98,26 +98,39 @@ const AuthForm = ({ type }: { type: FormType }) => {
   const isSignIn = type === "sign-in";
 
   return (
-    <div className="card-border lg:min-w-[566px]">
-      <div className="flex flex-col gap-6 card py-14 px-10">
-        <div className="flex flex-row gap-2 justify-center">
-          <Image src="/logo.svg" alt="logo" height={32} width={38} />
-          <h2 className="text-primary-100">PrepWise</h2>
+    <div className="card-border lg:min-w-[600px] max-w-2xl">
+      <div className="flex flex-col gap-8 card py-16 px-12">
+        {/* Logo and Brand */}
+        <div className="text-center space-y-4">
+          <div className="flex items-center justify-center gap-3">
+            <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center shadow-lg">
+              <Image src="/logo.svg" alt="logo" height={24} width={28} />
+            </div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">
+              PrepWise
+            </h1>
+          </div>
+          <h2 className="text-2xl font-semibold text-neutral-800">
+            {isSignIn ? "Welcome back!" : "Join PrepWise"}
+          </h2>
+          <p className="text-neutral-600">
+            {isSignIn
+              ? "Sign in to continue your interview practice"
+              : "Start practicing job interviews with AI"}
+          </p>
         </div>
-
-        <h3>Practice job interviews with AI</h3>
 
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="w-full space-y-6 mt-4 form"
+            className="w-full space-y-6 form"
           >
             {!isSignIn && (
               <FormField
                 control={form.control}
                 name="name"
-                label="Name"
-                placeholder="Your Name"
+                label="Full Name"
+                placeholder="Enter your full name"
                 type="text"
               />
             )}
@@ -125,8 +138,8 @@ const AuthForm = ({ type }: { type: FormType }) => {
             <FormField
               control={form.control}
               name="email"
-              label="Email"
-              placeholder="Your email address"
+              label="Email Address"
+              placeholder="Enter your email address"
               type="email"
             />
 
@@ -134,25 +147,29 @@ const AuthForm = ({ type }: { type: FormType }) => {
               control={form.control}
               name="password"
               label="Password"
-              placeholder="Enter your password"
+              placeholder="Create a secure password"
               type="password"
             />
 
-            <Button className="btn" type="submit">
-              {isSignIn ? "Sign In" : "Create an Account"}
+            <Button className="btn" type="submit" size="lg">
+              {isSignIn ? "Sign In" : "Create Account"}
             </Button>
           </form>
         </Form>
 
-        <p className="text-center">
-          {isSignIn ? "No account yet?" : "Have an account already?"}
+        <div className="text-center space-y-2">
+          <p className="text-neutral-600">
+            {isSignIn
+              ? "Don't have an account yet?"
+              : "Already have an account?"}
+          </p>
           <Link
             href={!isSignIn ? "/sign-in" : "/sign-up"}
-            className="font-bold text-user-primary ml-1"
+            className="inline-flex items-center font-semibold text-primary-600 hover:text-primary-700 transition-colors"
           >
             {!isSignIn ? "Sign In" : "Sign Up"}
           </Link>
-        </p>
+        </div>
       </div>
     </div>
   );
