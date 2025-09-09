@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 
 import { isAuthenticated } from "@/lib/actions/auth.action";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { LogoutButton } from "@/components/LogoutButton";
 
 const Layout = async ({ children }: { children: ReactNode }) => {
   const isUserAuthenticated = await isAuthenticated();
@@ -27,7 +28,10 @@ const Layout = async ({ children }: { children: ReactNode }) => {
               <h1 className="text-xl font-medium text-foreground">PrepWise</h1>
             </Link>
 
-            <ThemeToggle />
+            <div className="flex items-center gap-3">
+              <ThemeToggle />
+              <LogoutButton />
+            </div>
           </div>
         </div>
       </nav>
